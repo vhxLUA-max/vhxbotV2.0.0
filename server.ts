@@ -146,7 +146,7 @@ client.on('interactionCreate', async interaction => {
       const prompt = interaction.options.getString('prompt');
       const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
       const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
+        model: "gemini-2.0-flash",
         contents: prompt || "Hello",
         config: {
           systemInstruction: "You are vhxLUA AI, a helpful assistant for the vhxLUA Roblox script hub. Be concise, technical, and a bit edgy but professional. You know about Roblox scripting, Luau, and the vhxLUA features like Pixel Blade, Loot Hero, and Flick.",
@@ -394,11 +394,11 @@ client.on('interactionCreate', async interaction => {
   if (commandName === 'script') {
     const game = interaction.options.getString('game');
     const scripts: any = {
-      pixel_blade: '`loadstring(game:HttpGet("https://vhx.lua/pixel_blade"))()`',
-      loot_hero: '`loadstring(game:HttpGet("https://vhx.lua/loot_hero"))()`',
-      flick: '`loadstring(game:HttpGet("https://vhx.lua/flick"))()`',
-      survive_lava: '`loadstring(game:HttpGet("https://vhx.lua/survive_lava"))()`',
-      unc: '`loadstring(game:HttpGet("https://vhx.lua/unc"))()`'
+      pixel_blade: 'loadstring(game:HttpGet("https://raw.githubusercontent.com/vhxLUA-max/vhxframeworks/refs/heads/main/mainloader"))()',
+      loot_hero: 'loadstring(game:HttpGet("https://raw.githubusercontent.com/vhxLUA-max/vhxframeworks/refs/heads/main/mainloader"))()',
+      flick: 'loadstring(game:HttpGet("https://raw.githubusercontent.com/vhxLUA-max/vhxframeworks/refs/heads/main/mainloader"))()',
+      survive_lava: 'loadstring(game:HttpGet("https://raw.githubusercontent.com/vhxLUA-max/vhxframeworks/refs/heads/main/mainloader"))()',
+      unc: 'loadstring(game:HttpGet("https://raw.githubusercontent.com/vhxLUA-max/vhxframeworks/refs/heads/main/unctester"))()'
     };
 
     if (game) {
