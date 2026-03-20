@@ -3,7 +3,6 @@ import { createServer as createViteServer } from 'vite';
 import path from 'path';
 import { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 import { createClient } from '@supabase/supabase-js';
-import { GoogleGenAI } from "@google/genai";
 
 // --- Supabase Setup ---
 const supabaseUrl = process.env.SUPABASE_URL || '';
@@ -24,7 +23,6 @@ let commandCount = 0;
 const commands = [
   new SlashCommandBuilder().setName('stats').setDescription('Show live dashboard stats'),
   new SlashCommandBuilder().setName('changelog').setDescription('Show recent changelog entries'),
-  new SlashCommandBuilder().setName('ask').setDescription('Ask vhxLUA AI a question').addStringOption(o => o.setName('prompt').setDescription('Your question').setRequired(true)),
   new SlashCommandBuilder()
     .setName('game')
     .setDescription('Stats for a specific game')
@@ -140,32 +138,6 @@ client.on('interactionCreate', async interaction => {
   const isAdmin = ADMIN_IDS.includes(interaction.user.id);
   commandCount++;
 
-  if (commandName === 'ask') {
-    await interaction.deferReply();
-    try {
-      const prompt = interaction.options.getString('prompt');
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-      const response = await ai.models.generateContent({
-        model: "gemini-2.0-flash",
-        contents: prompt || "Hello",
-        config: {
-          systemInstruction: "You are vhxLUA AI, a helpful assistant for the vhxLUA Roblox script hub. Be concise, technical, and a bit edgy but professional. You know about Roblox scripting, Luau, and the vhxLUA features like Pixel Blade, Loot Hero, and Flick.",
-        }
-      });
-      
-      const text = response.text || "I'm sorry, I couldn't generate a response.";
-      const embed = new EmbedBuilder()
-        .setTitle('🤖 vhxLUA AI')
-        .setColor(0x00FF00)
-        .setDescription(text.length > 4096 ? text.substring(0, 4093) + '...' : text)
-        .setFooter({ text: `Prompt: ${prompt}` });
-      
-      await interaction.editReply({ embeds: [embed] });
-    } catch (error) {
-      console.error('AI Error:', error);
-      await interaction.editReply({ content: `Failed to process AI request: ${error instanceof Error ? error.message : 'Unknown error'}` });
-    }
-  }
 
   if (commandName === 'stats') {
     // Fetch total executions from unique_users as it seems to be the source of truth
@@ -381,7 +353,7 @@ client.on('interactionCreate', async interaction => {
       .setColor(0x00ff00)
       .setDescription('List of available commands:')
       .addFields(
-        { name: 'Public Commands', value: '`/stats`, `/game`, `/whois`, `/changelog`, `/script`, `/ask`, `/help`' }
+        { name: 'Public Commands', value: '`/stats`, `/game`, `/whois`, `/changelog`, `/script`, `/help`' }
       );
     
     if (isAdmin) {
